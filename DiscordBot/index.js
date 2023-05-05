@@ -1,7 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder     } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder, Collection     } = require('discord.js');
 const {token} = require('./config.json');
+const { REST } = require('@discordjs/rest');
+const { helpEmbed } = require('./Commands/general/help.js');
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds,
@@ -42,13 +44,34 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     const activityName = ["/help"];
     client.user.setPresence({ activities: [{ name: activityName[Math.floor(Math.random() * activityName.length)] }], status: 'online' , type: "WATCHING"});
+
+
+    client.application.commands.create({
+        name: 'ping',
+        description: 'Replies with Pong!',
+    });
+
+    client.application.commands.create({
+        name:'help',
+        description: 'User Guide',
+    });
 });
 
 
-client.on(Events.InteractionCreate, interaction => {
+client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'ping') {
+		await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
+	}
+
+    if (interaction.commandName === 'help') {
+        await interaction.reply({ embeds: [helpEmbed] }); 
+    }
+
     console.log(interaction);
 });
+
 
 
 client.login(token);
