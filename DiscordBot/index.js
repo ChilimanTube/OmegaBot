@@ -1,10 +1,22 @@
-const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder, Collection     } = require('discord.js');
-const {token} = require('./config.json');
+process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, "omega-keyfile.json");
+
+const fs = require('node:fs');
+const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder, Collection, VoiceChannel } = require('discord.js');
+const { joinVoiceChannel, createAudioResource, createAudioPlayer, StreamType, AudioPlayerStatus } = require('@discordjs/voice');
+const {token, clientId, clientKey, prefix} = require('./config.json');
 const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
 const { helpEmbed } = require('./Commands/general/help.js');
 const createRoom = require('./commands/lfg/create-room');
+const fetch = require('fetch-ponyfill')().fetch;
+const speech = require('@google-cloud/speech');
+const { Transform } = require('stream');
+const { log } = require('node:console');
+
+
+
+
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds,
@@ -12,6 +24,9 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     ], partials: [Partials.Channel]
 });
+
+const HOUNDIFY_CLIENT_ID = clientId;
+const HOUNDIFY_CLIENT_KEY = clientKey;
 
 client.commands = new Collection(); 
 
@@ -28,7 +43,6 @@ for (const file of commandFiles) {
 	}
 }
 
-
 new SlashCommandBuilder()
     .setName('ping')
     .setDescription('Replies with pong!');
@@ -40,8 +54,9 @@ new SlashCommandBuilder()
 new SlashCommandBuilder()
     .setName('help')
     .setDescription('Shows a list of commands');
-
-// const lfg = new SlashCommandBuilder()
+new SlashCommandBuilder()
+    .setName('activate')
+    .setDescription('Activates the Speech to Text feature');
 //     .setName('create-room')
 //     .setDescription('Creates a LFG room')
     
@@ -66,7 +81,6 @@ new SlashCommandBuilder()
 //         .setRequired(true));
 
 
-
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     const activityName = ["DO NOT USE, BOT IS IN DEVELOPMENT"];
@@ -88,44 +102,18 @@ client.on('ready', () => {
     });
 
     client.application.commands.create({
-        name:'create-room',
-        description: 'Creates a LFG room',
-        options: [
-            {
-                name: 'name',
-                description: 'The name of the room',
-                type: 'STRING',
-                required: true,
-            },
-            {
-                name: 'max-players',
-                description: 'The maximum number of players in the voice channel',
-                type: 'NUMBER',
-                required: false,
-            },
-            {
-                name: 'game',
-                description: 'The game you are playing',
-                type: 'STRING',
-                required: true,
-            },
-            {
-                name: 'number-of-players',
-                description: 'The number of players you are looking for',
-                type: 'NUMBER',
-                required: true,
-            },
-        ],
+        name:'activate',
+        description: 'Activates the Speech to Text feature',
     });
 });
 
 
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
+	if (!interaction.isCommand()) return;
 
     if (interaction.commandName === 'ping') {
-		await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
-	}
+        await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
+    }
 
     if (interaction.commandName === 'help') {
         await interaction.reply({ embeds: [helpEmbed] }); 
@@ -147,6 +135,88 @@ client.on(Events.InteractionCreate, async interaction => {
     console.log(interaction);
 });
 
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) return;
+  
+    if (interaction.commandName === 'activate') {
+        const voiceChannel = interaction.member.voice.channel;
+        if (!voiceChannel) {
+            return interaction.reply({
+                content: "You need to be in a voice channel to use this command.",
+                ephemeral: true,
+            });
+        }
+  
+        const connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: voiceChannel.guild.id,
+            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+        });
+
+        console.log(connection.state); // Should log 'signalling' or 'ready'
+
+        const client = new speech.SpeechClient();
+
+        const request = {
+            config: {
+                encoding: 'LINEAR16',
+                sampleRateHertz: 48000,
+                languageCode: 'en-US',
+            },
+            interimResults: false,
+        };
+
+        const recognizeStream = client
+            .streamingRecognize(request)
+            .on('error', error => {
+                console.error(`Recognize stream error: ${error}`);
+            })
+            .on('data', data => {
+                console.log(`Recognize stream data: ${data}`);
+                const transcription = data.results[0].alternatives[0].transcript;
+                console.log(`Transcription: ${transcription}`);
+                interaction.channel.send(`Transcription: ${transcription}`); // delete this later, just for testing
+                if (transcription.toLowerCase() === 'ping') {
+                    interaction.channel.send('Pong!');
+                }
+            })
+            .on('end', () => {
+                console.log('Recognize stream ended');
+            });
+
+        const convertToMono = new Transform({            
+            transform: (chunk, encoding, callback) => {
+                let monoChunk = new Int16Array(chunk.length / 4);
+                for (let i = 0; i < monoChunk.length; i++) {
+                    monoChunk[i] = chunk.readInt16LE(i * 4);
+                }
+                callback(null, Buffer.from(monoChunk.buffer));
+            },
+        });
+
+        
+
+        const receiver = connection.receiver;
+  
+        connection.on('speaking', async (user, speaking) => {
+            console.log(`Speaking state change. User: ${user.username}, Speaking: ${speaking}`); //Testing purposes
+            if (speaking.bitfield) {
+                const audioStream = connection.receiver.subscribe(user).pipeline;
+                audioStream.on('data', (chunk) => {                             // testing purposes, delete later?
+                    console.log(`Received ${chunk.length} bytes of data.`);
+                });
+                audioStream.pipe(convertToMono).pipe(recognizeStream);
+                console.log(`Sample rate: ${connection.receiver.ssrcToSpeakingData.get(user.id).sampleRate}`); // testing purposes
+
+            }
+        });
+        return interaction.reply({
+            content: 'Speech to Text activated. Start speaking to see the results.',
+            ephemeral: true,
+        });
+    }
+});
 
 
 client.login(token);
