@@ -1,84 +1,39 @@
 import Image from 'next/image';
 import Link from 'next/link';
-// import { useNavigation } from 'next/navigation';
+import { Header } from '@/components/header';
 import { ReactNode } from 'react';
+import { Footer } from '@/components/footer';
+import Head from 'next/head';
 
 export default function About() {
   return (
-    <main>
-      <header className="flex items-center justify-between">       
-        <nav className="navbar flex">
-            <ul className="navbar-list flex gap-4 text-xl ">
-                <NavItem href="/" activePath="/">Home</NavItem>
-                <NavItem href="/about" activePath="/about">About</NavItem>
-                <NavItem href="/commands" activePath="/commands">Commands</NavItem>
-                <NavItem href="/support" activePath="/support">Support</NavItem>
-            </ul>
-        </nav>
-        <Image
-          src="/SmallStar.png"
-          alt="Header Image"
-          width={150}
-          height={36}
-        />
-      </header>
-      <hr />
-      <section>
-      <h1 className="text-4xl m-4">About</h1>
-        <Image
-          src="/FullLogo.png"
-          alt="Main Image"
-          width={300}
-          height={150}
-        />
-        <div className="flex flex-col gap-4">
-          <article>
-            <h2>Article 1</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum eum necessitatibus odit, fuga error ab fugiat sapiente unde harum optio aspernatur alias beatae tempora corporis molestiae enim rem vero! Magni!</p>
-            <button>
-              <a href="/">Button 1</a>
-            </button>
-          </article>
-          <article>
-            <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores aspernatur qui officia similique adipisci placeat suscipit minus optio assumenda laboriosam impedit explicabo atque, odio, animi magnam corporis reprehenderit exercitationem quod!</h2>
-            <p>Content of Article 2</p>
-            <button>
-              <a href="/">Button 2</a>
-            </button>
-          </article>
-          {/* Add more articles here */}
-        </div>
-      </section>
-      <footer>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/SmallStar.png"
-              alt="Vercel Logo"
-              width={150}
-              height={36}
-              priority
-            />
-          </a>
-        </div>
-      </footer>
-    </main>
-  );
-}
+    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
+            <Head>
+                <title>About OMEGA - Discord Bot</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-function NavItem({ href, activePath, children }: { href: string, activePath: string, children: ReactNode }) {
-  const isActive = href === activePath;
+            <Header />
 
-  return (
-    <li className={`navbar-item m-0 ${isActive ? 'underline-animation' : ''}`}>
-      <Link href={href} as="a" passHref>
-      </Link>
-    </li>
+            <main className="flex-grow">
+                <section className="text-center py-20">
+                    <h1 className="text-4xl font-bold text-gray-800 dark:text-white">About OMEGA</h1>
+                    <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">Learn more about OMEGA, your all-in-one Discord bot solution.</p>
+                </section>
+
+                <section className="py-20 px-4 space-y-8 text-center">
+                    <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Our Mission</h2>
+                    <p className="text-lg text-gray-500 dark:text-gray-300"> Omega is a powerful and versatile bot designed to revolutionize the user experience for individuals with vision impairments on Discord servers. With its comprehensive suite of accessibility features, Omega aims to create an inclusive and welcoming environment for all users.</p>
+                    
+                    <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Our Team</h2>
+                    <p className="text-lg text-gray-500 dark:text-gray-300">I'm a high-school student and this project was made as a final project of my 3rd year.</p>
+                    
+                    <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Get in Touch</h2>
+                    <p className="text-lg text-gray-500 dark:text-gray-300">If you have any questions about OMEGA, don't hesitate to reach out to us. We're always here to help!</p>
+                </section>
+            </main>
+
+            <Footer />
+        </div>
   );
-}
+};
