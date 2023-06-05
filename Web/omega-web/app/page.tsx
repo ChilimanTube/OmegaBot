@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import Link from 'next/link';
+import ParallaxPage from './parallax/page';
 
 export default function Home() {
   return (
@@ -31,6 +32,8 @@ export default function Home() {
                     </button>
                 </section>
             </main>
+
+            <ParallaxPage />
 
             <Footer />
         </div>
