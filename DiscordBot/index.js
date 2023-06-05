@@ -1,4 +1,4 @@
-const path = require('node:path');
+const path = require('path');
 process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, "omega-keyfile.json");
 
 const fs = require('node:fs');
@@ -13,12 +13,18 @@ const fetch = require('fetch-ponyfill')().fetch;
 const speech = require('@google-cloud/speech');
 const { Transform } = require('stream');
 const { log } = require('node:console');
+const { OpusStream } = require('@discordjs/opus');
+const toBuffer = require('typedarray-to-buffer');
+const { generateDependencyReport } = require('@discordjs/voice');
+
+
 
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildVoiceStates,
     ], partials: [Partials.Channel]
 });
 
@@ -37,9 +43,10 @@ for (const file of commandFiles) {
 	}
 }
 
-new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Replies with pong!');
+// const pingCommand = new SlashCommandBuilder()
+//     .setName('ping')
+//     .setDescription('Replies with pong!');
+// client.application.commands.create(pingCommand);
 
 new SlashCommandBuilder()
     .setName('invite')
@@ -172,20 +179,27 @@ client.on('interactionCreate', async (interaction) => {
             console.log(`Speaking state change. User: ${user.username}, Speaking: ${speaking}`); //Testing purposes
             if (speaking.bitfield) {
                 const audioStream = connection.receiver.subscribe(user).pipeline;
+                const opusStream = new OpusStream();
+            
+                audioStream
+                    .pipe(opusStream)
+                    .pipe(convertToMono)
+                    .pipe(recognizeStream);
+            
                 audioStream.on('data', (chunk) => {                             // testing purposes, delete later?
                     console.log(`Received ${chunk.length} bytes of data.`);
                 });
-                audioStream.pipe(convertToMono).pipe(recognizeStream);
                 console.log(`Sample rate: ${connection.receiver.ssrcToSpeakingData.get(user.id).sampleRate}`); // testing purposes
-
             }
         });
+        console.log(voiceChannel.guild.voiceAdapterCreator);
+        connection.on('error', console.error);
         return interaction.reply({
             content: 'Speech to Text activated. Start speaking to see the results.',
-            ephemeral: true,
-        });
+            ephemeral: true,            
+        });        
     }
 });
 
-
+console.log(generateDependencyReport());
 client.login(token);
