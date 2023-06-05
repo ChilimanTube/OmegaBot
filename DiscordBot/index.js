@@ -15,18 +15,12 @@ const { Transform } = require('stream');
 const { log } = require('node:console');
 
 
-
-
-
 const client = new Client({
     intents: [GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     ], partials: [Partials.Channel]
 });
-
-const HOUNDIFY_CLIENT_ID = clientId;
-const HOUNDIFY_CLIENT_KEY = clientKey;
 
 client.commands = new Collection(); 
 
@@ -57,29 +51,6 @@ new SlashCommandBuilder()
 new SlashCommandBuilder()
     .setName('activate')
     .setDescription('Activates the Speech to Text feature');
-//     .setName('create-room')
-//     .setDescription('Creates a LFG room')
-    
-//     .addStringOption(option =>
-//          option.setName('name')
-//          .setDescription('The name of the room')
-//          .setRequired(true))
-    
-//     .addNumberOption(option2 =>
-//         option2.setName('max-players')
-//         .setDescription('The maximum number of players in the voice channel')
-//         .setRequired(false))
-
-//     .addStringOption(option3 =>
-//         option3.setName('game')
-//         .setDescription('The game you are playing')
-//         .setRequired(true))
-    
-//     .addNumberOption(option4 =>
-//         option4.setName('number-of-players')
-//         .setDescription('The number of players you are looking for')
-//         .setRequired(true));
-
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -194,8 +165,6 @@ client.on('interactionCreate', async (interaction) => {
                 callback(null, Buffer.from(monoChunk.buffer));
             },
         });
-
-        
 
         const receiver = connection.receiver;
   
