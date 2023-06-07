@@ -3,19 +3,17 @@ process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, "omega-keyfile
 
 const fs = require('node:fs');
 const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder, Collection, VoiceChannel } = require('discord.js');
-const { joinVoiceChannel, createAudioResource, createAudioPlayer, StreamType, AudioPlayerStatus } = require('@discordjs/voice');
 const {token, clientId, clientKey, prefix} = require('./config.json');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { helpEmbed } = require('./Commands/general/help.js');
 const createRoom = require('./commands/lfg/create-room');
 const fetch = require('fetch-ponyfill')().fetch;
-const speech = require('@google-cloud/speech');
 const { Transform } = require('stream');
 const { log } = require('node:console');
-const { OpusStream } = require('@discordjs/opus');
 const toBuffer = require('typedarray-to-buffer');
 const { generateDependencyReport } = require('@discordjs/voice');
+const { sendChat } = require('./CommandDetection/detection.js');
 
 
 
@@ -114,92 +112,30 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 
+const userNextMessage = new Map();
+
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
   
     if (interaction.commandName === 'activate') {
-        const voiceChannel = interaction.member.voice.channel;
-        if (!voiceChannel) {
-            return interaction.reply({
-                content: "You need to be in a voice channel to use this command.",
-                ephemeral: true,
-            });
-        }
-  
-        const connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: voiceChannel.guild.id,
-            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
-        });
+        await interaction.reply('Activated!');
 
-        console.log(connection.state); // Should log 'signalling' or 'ready'
+        userNextMessage.set(interaction.user.id, (message) => {
+            console.log(`Received message from ${message.author.username}: ${message.content}`);
+            sendChat(message);
+        })
 
-        const client = new speech.SpeechClient();
-
-        const request = {
-            config: {
-                encoding: 'LINEAR16',
-                sampleRateHertz: 48000,
-                languageCode: 'en-US',
-            },
-            interimResults: false,
-        };
-
-        const recognizeStream = client
-            .streamingRecognize(request)
-            .on('error', error => {
-                console.error(`Recognize stream error: ${error}`);
-            })
-            .on('data', data => {
-                console.log(`Recognize stream data: ${data}`);
-                const transcription = data.results[0].alternatives[0].transcript;
-                console.log(`Transcription: ${transcription}`);
-                interaction.channel.send(`Transcription: ${transcription}`); // delete this later, just for testing
-                if (transcription.toLowerCase() === 'ping') {
-                    interaction.channel.send('Pong!');
-                }
-            })
-            .on('end', () => {
-                console.log('Recognize stream ended');
-            });
-
-        const convertToMono = new Transform({            
-            transform: (chunk, encoding, callback) => {
-                let monoChunk = new Int16Array(chunk.length / 4);
-                for (let i = 0; i < monoChunk.length; i++) {
-                    monoChunk[i] = chunk.readInt16LE(i * 4);
-                }
-                callback(null, Buffer.from(monoChunk.buffer));
-            },
-        });
-
-        const receiver = connection.receiver;
-  
-        connection.on('speaking', async (user, speaking) => {
-            console.log(`Speaking state change. User: ${user.username}, Speaking: ${speaking}`); //Testing purposes
-            if (speaking.bitfield) {
-                const audioStream = connection.receiver.subscribe(user).pipeline;
-                const opusStream = new OpusStream();
-            
-                audioStream
-                    .pipe(opusStream)
-                    .pipe(convertToMono)
-                    .pipe(recognizeStream);
-            
-                audioStream.on('data', (chunk) => {                             // testing purposes, delete later?
-                    console.log(`Received ${chunk.length} bytes of data.`);
-                });
-                console.log(`Sample rate: ${connection.receiver.ssrcToSpeakingData.get(user.id).sampleRate}`); // testing purposes
-            }
-        });
-        console.log(voiceChannel.guild.voiceAdapterCreator);
-        connection.on('error', console.error);
-        return interaction.reply({
-            content: 'Speech to Text activated. Start speaking to see the results.',
-            ephemeral: true,            
-        });        
     }
 });
 
-console.log(generateDependencyReport());
+client.on('messageCreate', (message) => {
+    if (message.author.bot) return;
+    if (userNextMessage.has(message.author.id)) {
+        // Call the callback function and remove it
+        userNextMessage.get(message.author.id)(message);
+        userNextMessage.delete(message.author.id);
+    }
+    console.log("Message recieved: '" + message.content + "' from " + message.author.username);
+});
+
 client.login(token);
