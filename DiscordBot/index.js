@@ -13,7 +13,7 @@ const { Transform } = require('stream');
 const { log } = require('node:console');
 const toBuffer = require('typedarray-to-buffer');
 const { generateDependencyReport } = require('@discordjs/voice');
-const { sendChat } = require('./CommandDetection/detection.js');
+const { sendChat, systemSendChat } = require('./CommandDetection/detection.js');
 
 
 
@@ -122,7 +122,7 @@ client.on('interactionCreate', async (interaction) => {
 
         userNextMessage.set(interaction.user.id, (message) => {
             console.log(`Received message from ${message.author.username}: ${message.content}`);
-            sendChat(message);
+            systemSendChat(message);
         })
 
     }

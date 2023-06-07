@@ -1,7 +1,15 @@
 const { Configuration, OpenAIApi } = require("openai");
 const { config } = require("dotenv");
+const { helpEmbed } = require('../Commands/general/help.js');
 
 const openai = startChat();
+
+//list of possible commands
+const commands = ["ban", "timeout", "kick", "mute", "unmute", "help", "ping", "search"];
+
+//list of possible parameters
+const parameters = ["user", "time", "reason", "channel", "role", "message", "query"];
+
 
 function startChat() {
     config();
@@ -29,50 +37,71 @@ function sendChat(message) {
     });
 }
 
-function systemSendChat(query) {
+function systemSendChat(message) {
     openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
-            { "role": "system", "content": "Your name is Omega. You are working on Discord. Try to understand user intentions from their messages and based on their requests return the name and parameters of the command they want to execute. Your response can only be the following: ping, ban, timeout, kick, mute, unmute, help, ping, search. If the command needs parameters, include them after the name of the command." },
-            { "role": "user", "content": query }
+            { "role": "system", "content": "You are Omega, an AI on Discord. When a user sends a message, your task is to extract a command from the message. The only valid commands are: ping, ban, timeout, kick, mute, unmute, help, search. If a command requires parameters, please include them after the command. Interpret the user's intentions and respond with only the correct command and parameters, separated by a space." },
+            { "role": "user", "content": message.content }
         ],
         temperature: 0.6
     }).then((data) => {
-        console.log(data.data);
-        executeCommand(data.data.choices[0].message.split(" ")[0], data.data.choices[0].message.split(" ").slice(1));
+        console.log("Response data:", data.data);
+        console.log("Response choices:", data.data.choices);
+        if (data.data.choices && data.data.choices.length > 0) {
+            let result = getCommandFromResponse(data.data.choices[0].message);
+            console.log("DATA.DATA.CHOICES[0].MESSAGE: " + data.data.choices[0].message);
+            if (result.command) {
+                executeCommand(result.command, result.parameters, message);
+            } else {
+                console.log("Command not found");
+            }
+        } else {
+            console.log("No choices in response");
+        }
     }
     ).catch((error) => {
         console.error(error);
     });
 }
 
-//list of possible commands
-const commands = ["ban", "timeout", "kick", "mute", "unmute", "help", "ping", "search"];
+function getCommandFromResponse(response) {
+    let message = response.content;
+    let command = null;
+    let parameters = [];
 
-//list of possible parameters
-const parameters = ["user", "time", "reason", "channel", "role", "message", "query"];
+    let words = message.split(' ');
 
-function executeCommand(command, parameters) {
+    for (let word of words) {
+        if (commands.includes(word)) {
+            command = word;
+        }
+        else if (parameters.includes(word)) {
+            parameters.push(word);
+        }
+    }
+
+    return { command, parameters };
+}
+
+function executeCommand(command, parameters, message) {
     if(parameters != null){
         switch (command) {
             case "ban":
-                ban(parameters);
+                ban(parameters, message);
                 break;
             case "timeout":
-                timeout(parameters);
+                timeout(parameters, message);
                 break;
             case "kick":
-                kick(parameters);
+                kick(parameters, message);
                 break;
             case "mute":
-                mute(parameters);
+                mute(parameters, message);
                 break;
             case "unmute":
-                unmute(parameters);
-                break;
-            case "search":
-                search(parameters);
-                break;
+                unmute(parameters, message);
+                break;            
             default:
                 console.log("Command not found");
                 break;
@@ -80,10 +109,13 @@ function executeCommand(command, parameters) {
     } else {
         switch (command) {
             case "help":
-                help();
+                help(message);
                 break;
             case "ping":
-                ping();
+                ping(message);
+                break;
+            case "search":
+                search(message);
                 break;
             default:
                 console.log("Command not found");
@@ -92,12 +124,12 @@ function executeCommand(command, parameters) {
     }
 }
 
-function search(query) {
+function search(message) {
     openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
-            { "role": "system", "content": "Your name is Omega. You are working on Discord, in a community with a lot of users with vision problems. Try to " },
-            { "role": "user", "content": query }
+            { "role": "system", "content": "Your name is Omega. You are working on Discord, in a community with a lot of users with vision problems. Some of the members have a problem, try to solve it. " },
+            { "role": "user", "content": message.content }
         ],
         temperature: 0.6
     }).then((data) => {
@@ -109,5 +141,8 @@ function search(query) {
     });
 }
 
+function help(message) {
+    message.reply({ embeds: [helpEmbed] });
+}
 
-module.exports = { sendChat };
+module.exports = { sendChat, systemSendChat };
