@@ -16,7 +16,7 @@ export default function Home() {
 
             <Header />
 
-            <main className="flex-grow">
+            <main className="flex-grow motion-safe:animate-fadeIn">
                 <section className="text-center py-20">
                     <h1 className="text-4xl font-bold text-gray-800 dark:text-white">Welcome to OMEGA</h1>
                     <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">Your accessibility Discord bot.</p>
@@ -32,8 +32,6 @@ export default function Home() {
                     </button>
                 </section>
             </main>
-
-            <ParallaxPage />
 
             <Footer />
         </div>

@@ -41,7 +41,7 @@ function systemSendChat(message) {
     openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
-            { "role": "system", "content": "You are Omega, an AI on Discord. When a user sends a message, your task is to extract a command from the message. The only valid commands are: ping, ban, timeout, kick, mute, unmute, help, search. If a command requires parameters, please include them after the command. Interpret the user's intentions and respond with only the correct command and parameters, separated by a space." },
+            { "role": "system", "content": "You are Omega, an AI on Discord. When a user sends a message, your task is to extract a command from the message. The only valid commands are: ping, ban, timeout, kick, mute, unmute, help, search. If a command requires parameters, please include them after the command. Interpret the user's intentions and respond with only the correct command and parameters, separated by a space. Respond in this format: <commandName> <parameters>" },
             { "role": "user", "content": message.content }
         ],
         temperature: 0.6
