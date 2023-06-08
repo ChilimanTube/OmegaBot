@@ -39,13 +39,13 @@ export default function About() {
         <section className="py-20 px-4 space-y-8 text-center js-show-on-scroll">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Technical Side</h2>
           <p className="text-lg text-gray-500 dark:text-gray-300">OMEGA is a Discord bot written in JavaScript using the Discord.js library. It uses ChatGPT API for some of its functions. This page was written in TypeScript using Next.js, Tailwind.css</p>
-          <div className='flex justify-between mr-40 ml-40'>
-            <img src="/JSLogo.png" alt="JavaScriptLogo" className='h-20 mr-3'/>
-            <img src="/NodeJS.png" alt="JavaScriptLogo" className='h-20 mr-3'/>
-            <img src="/OpenAI.png" alt="JavaScriptLogo" className='h-20 mr-3'/>
-            <img src="/Discord.png" alt="JavaScriptLogo" className='h-20 mr-3'/>
-            <img src="/NextJS.png" alt="JavaScriptLogo" className='h-20 mr-3'/>
-            <img src="/Tailwind.png" alt="JavaScriptLogo" className='h-20 mr-3'/>            
+          <div className='flex justify-between mr-10 ml-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800 pt-5 pb-5'>
+            <img src="/JSLogo.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+            <img src="/NodeJS.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+            <img src="/OpenAI.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+            <img src="/Discord.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+            <img src="/NextJS.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+            <img src="/Tailwind.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>            
           </div>
         </section>
       </main>
