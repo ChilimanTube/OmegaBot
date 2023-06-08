@@ -24,7 +24,7 @@ export default function About() {
             </div>
           </div>
         </section>
-
+        
         <section className="py-20 px-4 space-y-8 text-center motion-safe:animate-fadeIn">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Our Mission</h2>
           <p className="text-lg text-gray-500 dark:text-gray-300"> Omega is a powerful and versatile bot designed to revolutionize the user experience for individuals with vision impairments on Discord servers. With its comprehensive suite of accessibility features, Omega aims to create an inclusive and welcoming environment for all users.</p>
@@ -36,16 +36,19 @@ export default function About() {
           <p className="text-lg text-gray-500 dark:text-gray-300">If you have any questions about OMEGA, don't hesitate to reach out to us. We're always here to help!</p>
         </section>
 
-        <section className="py-20 px-4 space-y-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Technical Side</h2>
-          <p className="text-lg text-gray-500 dark:text-gray-300">OMEGA is a Discord bot written in JavaScript using the Discord.js library. It uses ChatGPT API for some of its functions. This page was written in TypeScript using Next.js, Tailwind.css</p>
-          <div className='flex justify-between mr-10 ml-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800 pt-5 pb-5'>
-            <img src="/JSLogo.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
-            <img src="/NodeJS.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
-            <img src="/OpenAI.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
-            <img src="/Discord.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
-            <img src="/NextJS.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
-            <img src="/Tailwind.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>            
+        <section className="py-20 px-4 space-y-8 text-center h-screen bg-fixed bg-center bg-cover" style={{ backgroundImage: "url(/JavaScriptBG.jpg)" }} >
+         <div className='bg-gray-800 bg-opacity-50 items-center text-center pb-3 pt-3 rounded-lg shadow'>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Technical Side</h2>
+            <p className="text-lg text-gray-500 dark:text-gray-300 mr-5 ml-5">OMEGA is a Discord bot written in JavaScript using the Discord.js library. It uses ChatGPT API for some of its functions.</p>
+            <p className="text-lg text-gray-500 dark:text-gray-300 mr-5 ml-5">This page was written in TypeScript using Next.js, Tailwind.css</p>
+            <div className='flex justify-between mr-10 ml-10 bg-white rounded-lg shadow m-4 dark:bg-gray-400 pt-5 pb-5'>
+              <img src="/JSLogo.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+              <img src="/NodeJS.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+              <img src="/OpenAI.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+              <img src="/Discord.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+              <img src="/NextJS.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>
+              <img src="/Tailwind.png" alt="JavaScriptLogo" className='h-20 mr-3 ml-3'/>            
+            </div>
           </div>
         </section>
       </main>
