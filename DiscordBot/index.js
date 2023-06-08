@@ -1,6 +1,4 @@
 const path = require('path');
-process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, "omega-keyfile.json");
-
 const fs = require('node:fs');
 const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder, Collection, VoiceChannel } = require('discord.js');
 const {token, clientId, clientKey, prefix} = require('./config.json');
@@ -13,7 +11,19 @@ const { Transform } = require('stream');
 const { log } = require('node:console');
 const toBuffer = require('typedarray-to-buffer');
 const { generateDependencyReport } = require('@discordjs/voice');
-const { sendChat, systemSendChat } = require('./CommandDetection/detection.js');
+const { sendChat, systemSendChat, sendFaq } = require('./CommandDetection/detection.js');
+
+
+/*
+TODO_LIST:
+- Add a command to create a room
+- Add a command to invite the user to the created room
+- Natural Language FAQ
+- Natural Language rules
+- Code cleanup
+- Host the bot on a server along with the website
+- Maybe make the YouTube API work + Twitter API
+*/
 
 
 
@@ -41,22 +51,6 @@ for (const file of commandFiles) {
 	}
 }
 
-// const pingCommand = new SlashCommandBuilder()
-//     .setName('ping')
-//     .setDescription('Replies with pong!');
-// client.application.commands.create(pingCommand);
-
-new SlashCommandBuilder()
-    .setName('invite')
-    .setDescription('Invites a user to a voice channel');
-
-new SlashCommandBuilder()
-    .setName('help')
-    .setDescription('Shows a list of commands');
-new SlashCommandBuilder()
-    .setName('activate')
-    .setDescription('Activates the Speech to Text feature');
-
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     const activityName = ["DO NOT USE, BOT IS IN DEVELOPMENT"];
@@ -74,32 +68,47 @@ client.on('ready', () => {
 
     client.application.commands.create({
         name:'get-id',
-        description: 'Retrieves YouTube Channel ID',
+        description: 'Retrieves YouTube Channel ID - DEVELOPMENT ONLY',
     });
 
     client.application.commands.create({
         name:'activate',
-        description: 'Activates the Speech to Text feature',
+        description: 'Activates the command detection feature - DEVELOPMENT ONLY',
+    });
+
+    client.application.commands.create({
+        name:'faq',
+        description: 'Responds with a list of frequently asked questions using Natural Language Processing',
+    });
+
+    client.application.commands.create({
+        name:'rules',
+        description: 'Responds with a list of the server rules using Natural Language Processing',
+    });
+
+    client.application.commands.create({
+        name:'search',
+        description: 'Answers your question',
     });
 });
 
-
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isCommand()) return;
-
-    if (interaction.commandName === 'ping') {
+    if (!interaction.isCommand()) return;
+  
+    switch (interaction.commandName) {
+      case 'ping':
         await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
-    }
-
-    if (interaction.commandName === 'help') {
-        await interaction.reply({ embeds: [helpEmbed] }); 
-    }
-
-    if (interaction.commandName === 'get-id') {
+        break;
+  
+      case 'help':
+        await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
+        break;
+  
+      case 'get-id':
         await interaction.reply({ content: 'ID Retrieved.' });
-    }
-
-    if (interaction.commandName === 'create-room') {
+        break;
+  
+      case 'create-room':
         const { name, maxPlayers, game, numberOfPlayers } = interaction.options;
         createRoom(interaction, name, maxPlayers, game, numberOfPlayers);
         console.log(name, maxPlayers, game, numberOfPlayers);
@@ -107,26 +116,52 @@ client.on(Events.InteractionCreate, async interaction => {
         await interaction.reply({
           content: `Room Created: ${name} ${maxPlayers} ${game} ${numberOfPlayers}`,
         });
-      }
-    console.log(interaction);
-});
-
-
-const userNextMessage = new Map();
-
-client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand()) return;
+        break;
   
-    if (interaction.commandName === 'activate') {
+    case 'activate':
         await interaction.reply('Activated!');
-
         userNextMessage.set(interaction.user.id, (message) => {
             console.log(`Received message from ${message.author.username}: ${message.content}`);
             systemSendChat(message);
-        })
+        });
+        break;
 
+    case 'faq':
+        console.log('FAQ command detected');
+        console.log(interaction);
+        // await sendFaq(interaction);
+        break;
+
+    case 'rules':
+        break;
+
+    case 'search':
+        break;
+
+    case 'talk':
+        break;
+        
+      default:
+        interaction.reply({ content: 'Unknown command' });
+        console.log('Unknown command');
+        break;
     }
-});
+    console.log(interaction);
+  });
+
+// client.on('interactionCreate', async (interaction) => {
+//     if (!interaction.isCommand()) return;
+  
+//     if (interaction.commandName === 'activate') {
+//         await interaction.reply('Activated!');
+
+//         userNextMessage.set(interaction.user.id, (message) => {
+//             console.log(`Received message from ${message.author.username}: ${message.content}`);
+//             systemSendChat(message);
+//         })
+
+//     }
+// });
 
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
