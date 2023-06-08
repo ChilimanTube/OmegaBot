@@ -36,7 +36,7 @@ export default function About() {
           <p className="text-lg text-gray-500 dark:text-gray-300">If you have any questions about OMEGA, don't hesitate to reach out to us. We're always here to help!</p>
         </section>
 
-        <section className="py-20 px-4 space-y-8 text-center js-show-on-scroll">
+        <section className="py-20 px-4 space-y-8 text-center">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Technical Side</h2>
           <p className="text-lg text-gray-500 dark:text-gray-300">OMEGA is a Discord bot written in JavaScript using the Discord.js library. It uses ChatGPT API for some of its functions. This page was written in TypeScript using Next.js, Tailwind.css</p>
           <div className='flex justify-between mr-10 ml-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800 pt-5 pb-5'>
