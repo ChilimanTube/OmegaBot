@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.cdnfonts.com/css/blanka');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -24,4 +25,10 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+@font-face {
+  font-family: 'Blanka';
+  src: url('../public/fonts/Blanka-Regular.otf') format('opentype');
+  font-style: normal;
 }

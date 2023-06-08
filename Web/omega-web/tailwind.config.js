@@ -23,7 +23,10 @@ module.exports = {
       },
       variants: {
         animation: ["motion-safe"]
-      }
+      },
+      fontFamily: {
+        'blanka': ['Blanka', 'sans-serif'] 
+      },
     },
   },
   plugins: [],
