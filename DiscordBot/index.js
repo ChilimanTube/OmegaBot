@@ -79,6 +79,14 @@ client.on('ready', () => {
     client.application.commands.create({
         name:'faq',
         description: 'Responds with a list of frequently asked questions using Natural Language Processing',
+        options: [
+            {
+                name: 'question',
+                type: 3,
+                description: 'The question you want to ask',
+                required: true,
+            }
+        ]
     });
 
     client.application.commands.create({
@@ -93,21 +101,21 @@ client.on('ready', () => {
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isCommand()) return;
-  
+	if (!interaction.isCommand()) return;
+
     switch (interaction.commandName) {
       case 'ping':
         await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
         break;
-  
+
       case 'help':
         await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
         break;
-  
+
       case 'get-id':
         await interaction.reply({ content: 'ID Retrieved.' });
         break;
-  
+
       case 'create-room':
         const { name, maxPlayers, game, numberOfPlayers } = interaction.options;
         createRoom(interaction, name, maxPlayers, game, numberOfPlayers);
@@ -117,7 +125,7 @@ client.on(Events.InteractionCreate, async interaction => {
           content: `Room Created: ${name} ${maxPlayers} ${game} ${numberOfPlayers}`,
         });
         break;
-  
+
     case 'activate':
         await interaction.reply('Activated!');
         userNextMessage.set(interaction.user.id, (message) => {
@@ -129,7 +137,7 @@ client.on(Events.InteractionCreate, async interaction => {
     case 'faq':
         console.log('FAQ command detected');
         console.log(interaction);
-        // await sendFaq(interaction);
+        await sendFaq(interaction);
         break;
 
     case 'rules':
@@ -137,7 +145,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
     case 'search':
         break;
-
+        
     case 'talk':
         break;
         
@@ -147,7 +155,7 @@ client.on(Events.InteractionCreate, async interaction => {
         break;
     }
     console.log(interaction);
-  });
+});
 
 // client.on('interactionCreate', async (interaction) => {
 //     if (!interaction.isCommand()) return;
