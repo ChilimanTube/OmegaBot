@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits, Partials, Events, SlashCommandBuilder, Collec
 const {token, clientId, clientKey, prefix} = require('./config.json');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { helpEmbed } = require('./Commands/general/help.js');
+const { helpEmbed } = require('./commands/general/help.js');
 const { createRoom } = require('./commands/lfg/create-room');
 const fetch = require('fetch-ponyfill')().fetch;
 const { Transform } = require('stream');
