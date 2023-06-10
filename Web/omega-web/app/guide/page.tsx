@@ -9,7 +9,7 @@ export default function About() {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
       <Head>
-        <title>About OMEGA - Discord Bot</title>
+        <title>OMEGA Guide - Discord Bot</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -19,8 +19,11 @@ export default function About() {
         <section className="h-screen bg-fixed bg-center bg-cover" style={{ backgroundImage: "url(/bot-bg.jpg)" }}>
           <div className="bg-black bg-opacity-50 h-full flex items-center justify-center text-center">
             <div className="text-white px-4 motion-safe:animate-fadeIn">
-              <h1 className="text-4xl font-bold">Guide</h1>
-              <p className="mt-4 text-lg">Learn how to unleash OMEGAs full potential.</p>
+            <h1 className="text-5xl">                
+                <span className='font-blanka'>OMEGA </span>
+                <span className="font-bold">Guide</span>
+                </h1>
+              <p className="mt-4 text-lg">Learn how to unleash OMEGA's full potential.</p>
             </div>
           </div>
         </section>
@@ -37,10 +40,16 @@ export default function About() {
           </ul>
           
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Advanced Commands</h2>
-          <p className="text-lg text-gray-500 dark:text-gray-300">TBD</p>
+          <ul className=''>            
+            <li><b>Create Room</b> - <i>create-room [name] [max-players] [game] [number-of-players]</i> - Creates a voice channel with your specifications and creates an invite for you and your friends</li>            
+          </ul>
           
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">ChatGPT Integration</h2>
-          <p className="text-lg text-gray-500 dark:text-gray-300">TBD</p>
+          <ul className=''>            
+            <li><b>Rules</b> - <i>rules [question]</i> - Answers your question regarding server rules</li>            
+            <li><b>FAQ</b> - <i>faq [question]</i> - Answers your question regarding server frequently asked questions</li>            
+            <li><b>Ask</b> - <i>ask [question]</i> - Answers your question regarding anything else</li>            
+          </ul>
         </section>       
       </main>
 
