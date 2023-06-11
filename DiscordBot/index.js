@@ -16,17 +16,10 @@ const { sendInteractionChat, sendFaq, sendRules, sendAnswer, createVCInvite } = 
 
 /*
 TODO_LIST:
-- Add a command to create a room
-- Add a command to invite the user to the created room
-- Natural Language FAQ --> DONE
-- Natural Language rules --> DONE
 - Code cleanup
-- Host the bot on a server along with the website
 - Maybe make the YouTube API work + Twitter API
 - Website bot interaction counter + custom API for the website + database
 */
-
-
 
 
 const client = new Client({
