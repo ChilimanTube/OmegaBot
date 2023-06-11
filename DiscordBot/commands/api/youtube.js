@@ -1,78 +1,43 @@
-// Load the YouTube API client library
-gapi.load('client', function() {
-    // Set the API key
-    gapi.client.setApiKey('YOUR_API_KEY_HERE');
-    // Load the YouTube API
-    gapi.client.load('youtube', 'v3', function() {
-      // Set the channel ID of the channel you want to track
-      var channelId = 'CHANNEL_ID_HERE';
-      // Set the playlist ID of the uploads playlist for the channel
-      var playlistId = 'UU' + channelId.substring(2);
-      // Retrieve the latest video from the uploads playlist
-      gapi.client.youtube.playlistItems.list({
-        part: 'snippet',
-        playlistId: playlistId,
-        maxResults: 1
-      }).then(function(response) {
-        // Extract the video ID and construct the video link
-        var videoId = response.result.items[0].snippet.resourceId.videoId;
-        var videoLink = 'https://www.youtube.com/watch?v=' + videoId;
-        console.log(videoLink);
-        // Do something with the video link, such as display it on a web page
-      }, function(error) {
-        console.error(error);
-      });
-    });
-  });
-  
-
-  // Load the YouTube API client library
-gapi.load('client', function() {
-    // Set the API key
-    gapi.client.setApiKey('YOUR_API_KEY_HERE');
-    // Load the YouTube API
-    gapi.client.load('youtube', 'v3', function() {
-      // Set the username of the channel you want to track
-      var username = 'LogicProXGaming';
-      // Retrieve the channel ID for the username
-      gapi.client.youtube.channels.list({
-        part: 'id',
-        forUsername: username,
-        maxResults: 1
-      }).then(function(response) {
-        // Extract the channel ID
-        var channelId = response.result.items[0].id;
-        console.log(channelId);
-        // Do something with the channel ID
-      }, function(error) {
-        console.error(error);
-      });
-    });
-  });
-
-//-------------------------------------------------------
-  // Require the discord.js and discord-youtube-api modules
 const Discord = require("discord.js");
 const YouTube = require("discord-youtube-api");
+const {google} = require('googleapis');
+
+const youtubeChannelID = "";
+const youtubeIDRetrieval = google.youtube({
+  version: 'v3',
+  auth: "AIzaSyBI12APBVrpc2MqAJ9oTMI0_MEa5-yvcuY"
+});
+
+youtubeIDRetrieval.channels.list({
+  part: 'id',
+  forUsername: 'LogicProXGaming',
+  maxResults: 1
+}).then(response => {
+  youtubeChannelID = response.data.items[0];
+  console.log('Channel ID: ' + channel.id);
+}).catch(error => console.log(error));
+
+  // Require the discord.js and discord-youtube-api modules
 
 // Create a new client and a new YouTube object
-const client = new Discord.Client();
-const youtube = new YouTube("your-youtube-api-key");
+const youtube = new YouTube("AIzaSyBI12APBVrpc2MqAJ9oTMI0_MEa5-yvcuY");
 
 // Define the channel ID and the role ID for the bot
-const channelID = "your-channel-id";
-const roleID = "your-role-id";
+const channelID = youtubeChannelID;
+const roleID = "1117402779087016016";
 
 // Define a variable to store the latest video ID
 let latestVideoID = "";
 
 // Create a function to check for a new video every 5 minutes
 async function checkForNewVideo() {
+  console.log("Checking for new videos...");
   // Get the latest video from the channel
   let video = await youtube.getLatestVideo(channelID);
 
   // If the video ID is different from the stored one, post a URL to it
   if (video.id !== latestVideoID) {
+    console.log("New video found!");
     // Find a text channel to send the message
     let textChannel = client.channels.cache.find(
       (channel) => channel.type === "text"
@@ -87,5 +52,9 @@ async function checkForNewVideo() {
 
     // Update the stored video ID
     latestVideoID = video.id;
+  } else {
+    console.log("No new videos found.");
   }
 }
+
+module.exports = {checkForNewVideo};

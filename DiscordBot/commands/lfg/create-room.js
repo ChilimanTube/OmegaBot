@@ -39,12 +39,12 @@ async function deleteRoom(interaction){
 }
 
 async function createVCInvite(interaction, voiceChannel){
+  var numberOfUsers = (interaction.options.getInteger('max-players') - interaction.options.getInteger('number-of-players'));
   const embed = new Discord.EmbedBuilder()
     .setTitle(`${interaction.user.username} invites you to join them in ${interaction.options.getString('game')}`)
+    .setDescription(`Looking for ${numberOfUsers} more players`)
     .setColor(Math.floor(Math.random()*16777215))
     .setTimestamp();
-
-  var numberOfUsers = (interaction.options.getInteger('max-players') - interaction.options.getInteger('number-of-players'));
 
   const invite = await interaction.guild.invites.create(voiceChannel.id, {
     maxAge: 0,

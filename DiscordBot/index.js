@@ -12,15 +12,7 @@ const { log } = require('node:console');
 const toBuffer = require('typedarray-to-buffer');
 const { generateDependencyReport } = require('@discordjs/voice');
 const { sendInteractionChat, sendFaq, sendRules, sendAnswer, createVCInvite } = require('./commands/general/gpt.js');
-
-
-/*
-TODO_LIST:
-- Code cleanup
-- Maybe make the YouTube API work + Twitter API
-- Website bot interaction counter + custom API for the website + database
-*/
-
+const { checkForNewVideo } = require('./commands/api/youtube.js');
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds,
@@ -56,6 +48,9 @@ client.on('ready', () => {
         status: 'online'        
     });
 
+    checkForNewVideo();
+    setInterval(checkForNewVideo, 300000);
+
     // General Commands
 
     client.application.commands.create({
@@ -71,6 +66,11 @@ client.on('ready', () => {
     client.application.commands.create({
         name:'get-id',
         description: 'Retrieves YouTube Channel ID - DEVELOPMENT ONLY',
+    });
+
+    client.application.commands.create({
+        name:'check-for-new-videos',
+        description: 'Checks for new videos on the YouTube channel - DEVELOPMENT ONLY',
     });
 
     client.application.commands.create({
@@ -221,7 +221,7 @@ client.on('ready', () => {
             {
                 name: 'number-of-players',
                 type: 4,
-                description: 'The number of players in the room',
+                description: 'The number of players already in the group',
                 required: true,
             }
         ]
@@ -269,14 +269,23 @@ client.on(Events.InteractionCreate, async interaction => {
             await sendRules(interaction);
             break;
 
+        case 'check-for-new-videos':
+            console.log('Check for new videos command detected');
+            await checkForNewVideo();
+            break;
+
         case 'ban':
-
+            await interaction.reply({ content: 'Command not yet implemented' });
+            break;
         case 'kick':
-
+            await interaction.reply({ content: 'Command not yet implemented' });
+            break;
         case 'timeout':
-
+            await interaction.reply({ content: 'Command not yet implemented' });
+            break;
         case 'remove-timeout':        
-
+            await interaction.reply({ content: 'Command not yet implemented' });
+            break;
         default:
             interaction.reply({ content: 'Unknown command' });
             console.log('Unknown command');
