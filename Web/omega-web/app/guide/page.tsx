@@ -33,8 +33,10 @@ export default function About() {
           <h3 className='font-bold'>Utility</h3>
           <ul className=''>
             <li><b>Help</b> - <i>help</i> - displays a guide as a Discord message</li>
-            <li><b>Ping</b> - <i>ping</i> - checks latency between Discord and Omega</li>
+            <li><b>Ping</b> - <i>ping</i> - checks latency between Discord and Omega</li>            
+            <li><b>Warn</b> - <i>warn [user] [reason] </i> - warns a user with the provided reason</li>            
             <li><b>Timeout</b> - <i>timeout [user] [duration] [reason]</i> - timeout a user for a said duration with the specified reason</li>
+            <li><b>Remove Timeout</b> - <i>remove-timeout [user] [reason]</i> - removes timeout from a user</li>
             <li><b>Kick</b>- <i>kick [user] [reason] </i> - kick a user with the specified reason</li>
             <li><b>Ban</b> - <i>ban [user] [reason]</i> - bans a user with the specified reason</li>            
           </ul>

@@ -100,7 +100,7 @@ async function sendAnswer(interaction) {
             { "role": "system", "content": "Your name is Omega. You are working on Discord server called Blindcraft. The server is an official discord server of LogicProXGaming, aka Logic, who's a blind Minecraft player."},
             { "role": "user", "content": question }
         ],
-        temperature: 0.6
+        temperature: 0.8
     }).then((data) => {
         console.log(data.data);
         interaction.editReply(data.data.choices[0].message)
