@@ -2,6 +2,14 @@ const Discord = require("discord.js");
 const YouTube = require("discord-youtube-api");
 const {google} = require('googleapis');
 
+/* This code is retrieving the YouTube channel ID for the channel with the username "LogicProXGaming"
+using the YouTube Data API v3 and storing it in the `youtubeChannelID` variable. It is using the
+`googleapis` library to make the API request and passing in the API key for authentication. The
+`channels.list` method is used to retrieve the channel ID, and the `forUsername` parameter specifies
+the username of the channel to retrieve. The `maxResults` parameter is set to 1 to limit the
+response to a single channel. The retrieved channel ID is then stored in the `youtubeChannelID`
+variable and printed to the console. If an error occurs during the API request, it is logged to the
+console. */
 const youtubeChannelID = "";
 const youtubeIDRetrieval = google.youtube({
   version: 'v3',
@@ -17,44 +25,40 @@ youtubeIDRetrieval.channels.list({
   console.log('Channel ID: ' + channel.id);
 }).catch(error => console.log(error));
 
-  // Require the discord.js and discord-youtube-api modules
-
-// Create a new client and a new YouTube object
 const youtube = new YouTube("AIzaSyBI12APBVrpc2MqAJ9oTMI0_MEa5-yvcuY");
 
-// Define the channel ID and the role ID for the bot
 const channelID = youtubeChannelID;
 const roleID = "1117402779087016016";
 
-// Define a variable to store the latest video ID
 let latestVideoID = "";
 
-// Create a function to check for a new video every 5 minutes
+/**
+ * The function checks for new videos on a YouTube channel and sends a notification to a Discord text
+ * channel if a new video is found.
+ */
 async function checkForNewVideo() {
   console.log("Checking for new videos...");
-  // Get the latest video from the channel
   let video = await youtube.getLatestVideo(channelID);
 
-  // If the video ID is different from the stored one, post a URL to it
   if (video.id !== latestVideoID) {
     console.log("New video found!");
-    // Find a text channel to send the message
     let textChannel = client.channels.cache.find(
       (channel) => channel.type === "text"
     );
 
-    // If the text channel exists, send the message
     if (textChannel) {
       textChannel.send(
         `@${roleID} A new video has been uploaded by ${video.channel.title}: ${video.url}`
       );
     }
 
-    // Update the stored video ID
     latestVideoID = video.id;
   } else {
     console.log("No new videos found.");
   }
 }
 
+/* `module.exports = {checkForNewVideo};` is exporting the `checkForNewVideo` function from the module
+so that it can be used in other parts of the codebase. This allows other files to import and use the
+`checkForNewVideo` function by requiring the module that exports it. */
 module.exports = {checkForNewVideo};

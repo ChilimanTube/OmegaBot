@@ -1,6 +1,13 @@
 const Discord = require('discord.js');
 const { Permissions, Partials, Events, EmbedBuilder, MessageActionRow, MessageButton, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 
+/**
+ * This function creates a new voice channel in a Discord server with specific permissions and user
+ * limits, and generates an invite for the channel.
+ * @param interaction - The interaction object represents the interaction between the user and the bot.
+ * It contains information about the user, the command they used, and any options or arguments they
+ * provided.
+ */
 async function createRoom(interaction){
 
     await interaction.deferReply();
@@ -27,6 +34,12 @@ async function createRoom(interaction){
     createVCInvite(interaction, channel);
 }
 
+/**
+ * This function deletes a specified channel in a Discord server.
+ * @param interaction - The interaction parameter is an object that represents the interaction between
+ * the user and the bot. It contains information such as the user who initiated the interaction, the
+ * command that was used, and any options or arguments that were provided.
+ */
 async function deleteRoom(interaction){
     await interaction.deferReply();
     const channelName = interaction.options.getString('name');
@@ -38,6 +51,14 @@ async function deleteRoom(interaction){
     });
 }
 
+/**
+ * This function creates a voice channel invite with a specified number of maximum users and generates
+ * a button to join the channel.
+ * @param interaction - The interaction object represents the interaction between the user and the bot.
+ * It contains information about the user, the command they used, and any options or arguments they
+ * provided.
+ * @param voiceChannel - The voice channel where the invite will be created.
+ */
 async function createVCInvite(interaction, voiceChannel){
   var numberOfUsers = (interaction.options.getInteger('max-players') - interaction.options.getInteger('number-of-players'));
   const embed = new Discord.EmbedBuilder()

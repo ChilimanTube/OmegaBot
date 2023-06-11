@@ -14,6 +14,9 @@ const { generateDependencyReport } = require('@discordjs/voice');
 const { sendInteractionChat, sendFaq, sendRules, sendAnswer, createVCInvite } = require('./commands/general/gpt.js');
 const { checkForNewVideo } = require('./commands/api/youtube.js');
 
+/* This code is creating a new instance of the Discord.js `Client` class with specific intents and
+partials. Intents are used to specify which events the bot will receive from Discord, and partials
+are used to enable caching of certain types of data. */
 const client = new Client({
     intents: [GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -22,6 +25,11 @@ const client = new Client({
     ], partials: [Partials.Channel]
 });
 
+/* This code is setting up the bot's commands by creating a new `Collection` object to store them,
+reading the command files from the `commands` directory, and adding each command to the `Collection`
+object with its name as the key. It also checks that each command file has the required `data` and
+`execute` properties and logs a warning if they are missing. This allows the bot to easily access
+and execute the appropriate command when a user inputs a command. */
 client.commands = new Collection(); 
 
 const commandsPath = path.join(__dirname, 'commands');
@@ -37,6 +45,10 @@ for (const file of commandFiles) {
 	}
 }
 
+/* The above code is setting up various Discord bot commands using the Discord.js library. It creates
+commands for general use, such as "ping" and "help", as well as utility commands like "ban" and
+"kick". It also sets up a presence for the bot and schedules a function to check for new videos on a
+YouTube channel. */
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     const activityName = ["DO NOT USE, BOT IS IN DEVELOPMENT"];
@@ -228,6 +240,11 @@ client.on('ready', () => {
     });
 });
 
+/* The above code is an event listener for Discord interactions. It checks if the interaction is a
+command and then performs different actions based on the command name. The actions include replying
+with a message, creating a voice channel, sending a FAQ or rules message, checking for new videos,
+and more. Some of the commands are not yet implemented and will reply with a message indicating
+that. The code also logs some information to the console for debugging purposes. */
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isCommand()) return;
 
@@ -294,4 +311,6 @@ client.on(Events.InteractionCreate, async interaction => {
     console.log(interaction);
 });
 
+/* `client.login(token);` is logging the bot into Discord using the provided token. This allows the bot
+to connect to the Discord API and start receiving events and interactions. */
 client.login(token);

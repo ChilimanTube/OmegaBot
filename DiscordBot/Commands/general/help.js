@@ -8,6 +8,10 @@ const author = {
     // url: 'https://vkral.xyz' - still in development
 }
 
+/* This code is creating a new Discord message embed object called `helpEmbed`. The embed has various
+properties such as color, title, description, thumbnail, fields, author, timestamp, and footer.
+These properties are set using methods provided by the `Discord.EmbedBuilder` class. The `helpEmbed`
+object is then exported for use in other parts of the code. */
 const helpEmbed = new Discord.EmbedBuilder()
     .setColor(0x0099FF)
     .setTitle('__**Help Guide**__')
@@ -24,6 +28,4 @@ const helpEmbed = new Discord.EmbedBuilder()
     .setTimestamp()
     .setFooter({text: 'OmegaBot by Chili'});
 
-    module.exports = {
-        helpEmbed,
-    };
+module.exports = {helpEmbed,};

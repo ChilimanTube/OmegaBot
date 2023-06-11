@@ -3,6 +3,12 @@ const { config } = require("dotenv");
 
 const openai = startChat();
 
+/**
+ * The function initializes and returns an instance of the OpenAI API with a given organization and API
+ * key.
+ * @returns The function `startChat()` is returning an instance of the `OpenAIApi` class, which is
+ * created using the `Configuration` class and an API key.
+ */
 function startChat() {
     config();
     const configuration = new Configuration({
@@ -12,6 +18,12 @@ function startChat() {
     return new OpenAIApi(configuration);
 }
 
+/**
+ * The function sends a chat interaction to OpenAI's GPT-3 model and returns a response to the user.
+ * @param interaction - The interaction object represents a user's interaction with a Discord bot. It
+ * contains information about the user, the command they used, and any options or arguments they
+ * provided.
+ */
 async function sendInteractionChat(interaction) {
     const question = interaction.options.get('question').value;
 
@@ -45,6 +57,11 @@ async function sendInteractionChat(interaction) {
     How old is the server? - This map started 3 years ago as Logic's first survival map. It was uploaded to Realms 2 months later after his other blind friends and some subscribers wanted to play, and it was transferred to its current home in January 2021; 
     What about the flying players? - Blindcraft is a survival SMP. If you see a staff member flying, don't always assume they are in creative as we have access to /fly. If you see a non-staff member non-elytra flying, please message a staff member with that person's username and the day and estimated time of day so it can be handled;`;
 
+/**
+ * The function sends a response to a user's question using an AI model and a pre-defined FAQ.
+ * @param interaction - The interaction object represents the interaction between the user and the bot,
+ * and contains information about the user's input and the context of the interaction.
+ */
 async function sendFaq(interaction) {
     const question = interaction.options.get('question').value;
     
@@ -67,6 +84,11 @@ async function sendFaq(interaction) {
     });
 }
 
+/**
+ * This function sends a response to a user's question using OpenAI's GPT-3 language model.
+ * @param interaction - The interaction object represents the interaction between the user and the bot
+ * in Discord. It contains information about the user, the channel, and the command that was invoked.
+ */
 async function sendAnswer(interaction) {
     const question = interaction.options.get('question').value;
     
@@ -101,6 +123,13 @@ Rule 10 - Follow all personnel instructions immediately
 Punishments apply dependently on SMP and Discord server. If you will get banned / kicked from DC, so you will be from SMP. (In the opposite case, severity of the rule breaking action is taken under consideration).
 Rules apply to your nickname, username, status and activity.`
 
+/**
+ * This is a JavaScript function that uses OpenAI's GPT-3 language model to respond to a user's
+ * question based on a set of rules for a Discord server called Blindcraft.
+ * @param interaction - The interaction object represents the interaction between the user and the
+ * Discord bot. It contains information about the user, the command they used, and any options or
+ * arguments they provided.
+ */
 async function sendRules(interaction) {
     const question = interaction.options.get('question').value;
     
