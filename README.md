@@ -19,4 +19,11 @@ node .
 
 Logged in as OmegaBot#0838!
 
+
+# How to use Omega in Discord
+
+At the moment, **Omega can only be controlled by slash commands**. Slash commands are more user friendly. However, inline commands using prefix are *coming soon*. 
+
+## NOTE: This bot is specifically made for one server. There are hard-coded IDs of channels and roles. You may need to change those in order for the bot to run correctly.
+
 ### Author: Vojtěch Král (@ChilimanTube) :+1:
