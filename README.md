@@ -1,4 +1,4 @@
-# How to use Discord bot locally
+# How to use Omega bot locally
 
 Invite the bot to your Discord server, where you want to test it. You can do so by going on the website, which you can host locally, or just by clicking on the link below.
 
