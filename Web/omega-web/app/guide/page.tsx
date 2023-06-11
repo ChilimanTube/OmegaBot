@@ -23,7 +23,7 @@ export default function About() {
                 <span className='font-blanka'>OMEGA </span>
                 <span className="font-bold">Guide</span>
                 </h1>
-              <p className="mt-4 text-lg">Learn how to unleash OMEGA's full potential.</p>
+              <p className="mt-4 text-lg">Learn how to unleash OMEGA&apos;s full potential.</p>
             </div>
           </div>
         </section>

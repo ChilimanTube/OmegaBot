@@ -35,10 +35,10 @@ export default function About() {
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-5">Our Team</h2>
           <h3 className='text-2xl mb-2'>Vojtěch Král</h3>
           <p className='mb-4'><i>Developer</i></p>
-          <p className="text-lg text-gray-500 dark:text-gray-300 mb-16">Hi! I'm a high-school student and this project was made as a final project of my 3rd year.</p>
+          <p className="text-lg text-gray-500 dark:text-gray-300 mb-16">Hi! I&apos;m a high-school student and this project was made as a final project of my 3rd year.</p>
           
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-5">Get in Touch</h2>
-          <p className="text-lg text-gray-500 dark:text-gray-300">If you have any questions about OMEGA, don't hesitate to reach out to us. We're always here to help!</p>
+          <p className="text-lg text-gray-500 dark:text-gray-300">If you have any questions about OMEGA, don&apos;t hesitate to reach out to us. We&apos;re always here to help!</p>
         </section>
 
         <section className="py-20 px-4 space-y-8 text-center h-screen bg-fixed bg-center bg-cover bg-opacity" style={{ backgroundImage: "url(/JavaScriptBG.jpg)" }} >
