@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const YouTube = require("discord-youtube-api");
 const {google} = require('googleapis');
+const { config } = require("dotenv");
 
 /* This code is retrieving the YouTube channel ID for the channel with the username "LogicProXGaming"
 using the YouTube Data API v3 and storing it in the `youtubeChannelID` variable. It is using the
@@ -13,7 +14,7 @@ console. */
 const youtubeChannelID = "";
 const youtubeIDRetrieval = google.youtube({
   version: 'v3',
-  auth: "AIzaSyBI12APBVrpc2MqAJ9oTMI0_MEa5-yvcuY"
+  auth: process.env.YOUTUBE_API_KEY
 });
 
 youtubeIDRetrieval.channels.list({
@@ -25,7 +26,7 @@ youtubeIDRetrieval.channels.list({
   console.log('Channel ID: ' + channel.id);
 }).catch(error => console.log(error));
 
-const youtube = new YouTube("AIzaSyBI12APBVrpc2MqAJ9oTMI0_MEa5-yvcuY");
+const youtube = new YouTube(process.env.YOUTUBE_API_KEY);
 
 const channelID = youtubeChannelID;
 const roleID = "1117402779087016016";
