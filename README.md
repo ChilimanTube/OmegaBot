@@ -5,7 +5,7 @@ Invite the bot to your Discord server, where you want to test it. You can do so 
 [Use this link to invite the bot to your Discord server](https://discord.com/api/oauth2/authorize?client_id=1101441641593700432&permissions=8&scope=bot)
 
 When you have the bot on your server, you need to install all the dependencies, which the bot uses.
-Firstly, go to /DiscordBot folder and run the following code:
+Firstly, go to `/DiscordBot` folder and run the following code:
 
 ```bash 
 # This will install all packages that are needed
