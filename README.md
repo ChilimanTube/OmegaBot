@@ -19,4 +19,4 @@ node .
 
 Logged in as OmegaBot#0838!
 
-### Author: Vojtěch Král (@ChilimanTube)
+### Author: Vojtěch Král (@ChilimanTube) :+1:
