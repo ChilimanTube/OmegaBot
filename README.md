@@ -18,3 +18,5 @@ node .
 ## The `node .` command runs the bot. You should see the following message in your console:
 
 Logged in as OmegaBot#0838!
+
+### Author: Vojtěch Král (@ChilimanTube)
