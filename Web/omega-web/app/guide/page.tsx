@@ -30,7 +30,7 @@ export default function About() {
 
         <section className="py-20 px-4 space-y-8 text-center motion-safe:animate-fadeIn">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Basic Commands</h2>
-          <h3>Utility</h3>
+          <h3 className='font-bold'>Utility</h3>
           <ul className=''>
             <li><b>Help</b> - <i>help</i> - displays a guide as a Discord message</li>
             <li><b>Ping</b> - <i>ping</i> - checks latency between Discord and Omega</li>
@@ -40,7 +40,8 @@ export default function About() {
           </ul>
           
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Advanced Commands</h2>
-          <ul className=''>            
+          <h3 className='font-bold'>Looking for group</h3>   
+          <ul className=''>                     
             <li><b>Create Room</b> - <i>create-room [name] [max-players] [game] [number-of-players]</i> - Creates a voice channel with your specifications and creates an invite for you and your friends</li>            
           </ul>
           
