@@ -24,7 +24,7 @@ youtubeIDRetrieval.channels.list({
 }).then(response => {
   youtubeChannelID = response.data.items[0];
   console.log('Channel ID: ' + channel.id);
-}).catch(error => console.log(error));
+}).catch(error => console.log("Connection to YouTube couldn't be established."));
 
 const youtube = new YouTube(process.env.YOUTUBE_API_KEY);
 
@@ -39,7 +39,7 @@ let latestVideoID = "";
  */
 async function checkForNewVideo() {
   console.log("Checking for new videos...");
-  let video = await youtube.getLatestVideo(channelID);
+  let video = await youtube.getVideo(channelID);
 
   if (video.id !== latestVideoID) {
     console.log("New video found!");

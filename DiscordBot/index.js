@@ -13,6 +13,7 @@ const toBuffer = require('typedarray-to-buffer');
 const { generateDependencyReport } = require('@discordjs/voice');
 const { sendInteractionChat, sendFaq, sendRules, sendAnswer, createVCInvite } = require('./commands/general/gpt.js');
 const { checkForNewVideo } = require('./commands/api/youtube.js');
+const { warn, timeout, removeTimeout, kick } = require('./commands/utility/infractions');
 
 /* This code is creating a new instance of the Discord.js `Client` class with specific intents and
 partials. Intents are used to specify which events the bot will receive from Discord, and partials
@@ -50,6 +51,7 @@ commands for general use, such as "ping" and "help", as well as utility commands
 "kick". It also sets up a presence for the bot and schedules a function to check for new videos on a
 YouTube channel. */
 client.on('ready', () => {
+    console.log("-------------------- OmegaBot --------------------");
     console.log(`Logged in as ${client.user.tag}!`);
     const activityName = ["DO NOT USE, BOT IS IN DEVELOPMENT"];
     client.user.setPresence({
@@ -59,9 +61,6 @@ client.on('ready', () => {
          }],
         status: 'online'        
     });
-
-    checkForNewVideo();
-    setInterval(checkForNewVideo, 300000);
 
     // General Commands
 
@@ -73,11 +72,6 @@ client.on('ready', () => {
     client.application.commands.create({
         name:'help',
         description: 'User Guide',
-    });
-
-    client.application.commands.create({
-        name:'get-id',
-        description: 'Retrieves YouTube Channel ID - DEVELOPMENT ONLY',
     });
 
     client.application.commands.create({
@@ -140,7 +134,7 @@ client.on('ready', () => {
                 name: 'reason',
                 type: 3,
                 description: 'The reason for the ban',
-                required: false,
+                required: true,
             }
         ]
     });
@@ -159,7 +153,7 @@ client.on('ready', () => {
                 name: 'reason',
                 type: 3,
                 description: 'The reason for the kick',
-                required: false,
+                required: true,
             }
         ]
     });
@@ -177,14 +171,14 @@ client.on('ready', () => {
             {
                 name: 'duration',                
                 type: 4,
-                description: 'Duration of the timeout in minutes (1-60, 0 to infinite)',
+                description: 'Duration of the timeout in minutes (max 40320)',
                 required: true,
             },
             {
                 name: 'reason',
                 type: 3,
                 description: 'The reason for the timeout',
-                required: false,
+                required: true,
             }
         ]
     });
@@ -203,7 +197,26 @@ client.on('ready', () => {
                 name: 'reason',
                 type: 3,
                 description: 'The reason for removing the timeout',
-                required: false,
+                required: true,
+            }
+        ]
+    });
+
+    client.application.commands.create({
+        name:'warn',
+        description: 'Warns a user',
+        options: [
+            {
+                name: 'user',
+                type: 6,
+                description: 'The user you want to warn',
+                required: true,
+            },
+            {
+                name: 'reason',
+                type: 3,
+                description: 'The reason for the warning',
+                required: true,
             }
         ]
     });
@@ -277,9 +290,6 @@ client.on(Events.InteractionCreate, async interaction => {
             console.log('Ask command detected');
             await sendAnswer(interaction);
             break;
-            
-        case 'talk':
-            break;
         
         case 'rules':
             console.log('Rules command detected');
@@ -288,21 +298,33 @@ client.on(Events.InteractionCreate, async interaction => {
 
         case 'check-for-new-videos':
             console.log('Check for new videos command detected');
-            await checkForNewVideo();
+            await interaction.reply({ content: 'Command not yet implemented' });
+            break;
+
+        // Moderation Commands
+
+        case 'warn':
+            console.log('Warn command detected');
+            await warn(interaction);
             break;
 
         case 'ban':
+            console.log('Ban command detected');
             await interaction.reply({ content: 'Command not yet implemented' });
             break;
+
         case 'kick':
             await interaction.reply({ content: 'Command not yet implemented' });
             break;
+
         case 'timeout':
-            await interaction.reply({ content: 'Command not yet implemented' });
+            //await timeout(interaction);
             break;
+
         case 'remove-timeout':        
-            await interaction.reply({ content: 'Command not yet implemented' });
+            //await removeTimeout(interaction);
             break;
+
         default:
             interaction.reply({ content: 'Unknown command' });
             console.log('Unknown command');
