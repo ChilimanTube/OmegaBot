@@ -24,6 +24,6 @@ Logged in as OmegaBot#0838!
 
 At the moment, **Omega can only be controlled by slash commands**. Slash commands are more user friendly. However, inline commands using prefix are *coming soon*. 
 
-__**NOTE:**__ This bot is specifically made for one server. There are hard-coded IDs of channels and roles. You may need to change those in order for the bot to run correctly.
+:warning: __**NOTE:**__ This bot is specifically made for one server. There are hard-coded IDs of channels and roles. You may need to change those in order for the bot to run correctly. :warning:
 
 ### Author: Vojtěch Král (@ChilimanTube) :+1:
