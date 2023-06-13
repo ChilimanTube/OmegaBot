@@ -318,10 +318,12 @@ client.on(Events.InteractionCreate, async interaction => {
             break;
 
         case 'timeout':
+            await interaction.reply({ content: 'Command disabled for safety reasons. Refer to the source code and enable it.', ephemeral: true});
             //await timeout(interaction);
             break;
 
-        case 'remove-timeout':        
+        case 'remove-timeout':
+            await interaction.reply({ content: 'Command disabled for safety reasons. Refer to the source code and enable it.', ephemeral: true});        
             //await removeTimeout(interaction);
             break;
 
