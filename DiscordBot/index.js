@@ -14,6 +14,9 @@ const { generateDependencyReport } = require('@discordjs/voice');
 const { sendInteractionChat, sendFaq, sendRules, sendAnswer, createVCInvite } = require('./commands/general/gpt.js');
 const { checkForNewVideo } = require('./commands/api/youtube.js');
 const { warn, timeout, removeTimeout, kick } = require('./commands/utility/infractions');
+const mysql = require('mysql');
+const express = require('express');
+const { error } = require('console');
 
 /* This code is creating a new instance of the Discord.js `Client` class with specific intents and
 partials. Intents are used to specify which events the bot will receive from Discord, and partials
@@ -25,6 +28,45 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates,
     ], partials: [Partials.Channel]
 });
+
+const app = express();
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'maria',
+    database: 'OmegaDB'
+});
+
+try {
+    connection.connect();
+}
+catch (error) {
+    console.log('Error connecting to database: ' + error);
+}
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+
+app.get('/api/interactions', (req, res) => {
+    connenction.query('SELECT COUNT(*) AS total_interactions FROM Interactions', (error, results) => {
+        if (error) {
+            console.error('Error retrieving total interactions from database: ' + error);
+            res.status(500).json({error: 'Internal Server Error'});
+        } else {
+            const count = results[0].count || 0;
+            res.json({count});
+        }
+    });
+});
+
+app.listen(3000, () => {
+    console.log('API server is listening on port 3000');
+});
+
 
 /* This code is setting up the bot's commands by creating a new `Collection` object to store them,
 reading the command files from the `commands` directory, and adding each command to the `Collection`
@@ -260,7 +302,12 @@ and more. Some of the commands are not yet implemented and will reply with a mes
 that. The code also logs some information to the console for debugging purposes. */
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isCommand()) return;
-
+    
+    connenction.query('INSERT INTO Interactions (user_id, interaction_type) VALUES (?, ?)', [interaction.user.id, 'SlashCommand'], function (err, result) {
+        if (err) throw err;
+        console.log('Interaction logged to database');
+    });
+    
     switch (interaction.commandName) {
         case 'ping':
             await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
