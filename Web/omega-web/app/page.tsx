@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from 'react';
+// import { useState, useEffect, use } from 'react';
 
 import Head from 'next/head';
 import { Header } from '@/components/header';
@@ -6,9 +6,9 @@ import { Footer } from '@/components/footer';
 import Link from 'next/link';
 
 export default function Home() {
-  useEffect(() => {
+  // useEffect(() => {
     
-  }, []);
+  // }, []);
 
   return (
 
